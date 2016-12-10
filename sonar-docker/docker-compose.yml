@@ -11,8 +11,9 @@ services:
       - SONARQUBE_JDBC_USERNAME=sonar
       - SONARQUBE_JDBC_PASSWORD=sonar
       - SONARQUBE_JDBC_URL=jdbc:mysql://sonar-db:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
-    links:
-      - sonar-db
+    networks:
+      - jenkinsdocker_ci-net
+      - sonar-net
     restart: always
   # Database
   sonar-db:
@@ -25,7 +26,15 @@ services:
       - MYSQL_PASSWORD=sonar
     volumes:
       - mysqldata:/var/lib/mysql
+    networks:
+      - sonar-net
     restart: always
 
 volumes:
   mysqldata:
+
+networks:
+  jenkinsdocker_ci-net:
+    external: true
+  sonar-net:
+    driver: bridge

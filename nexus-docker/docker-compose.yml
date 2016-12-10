@@ -8,6 +8,13 @@ services:
       - nexusdata:/nexus-data
     ports:
       - "8081:8081"
+    networks:
+      - jenkinsdocker_ci-net
+    restart: always
 
 volumes:
   nexusdata:
+
+networks:
+  jenkinsdocker_ci-net:
+    external: true
