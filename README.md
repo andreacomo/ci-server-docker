@@ -18,7 +18,34 @@ According to Docker Compose commands (`up`/`down`, `start`/`stop`), here are fou
  * `ci-start.sh`: start already existing containers
  * `ci-stop.sh`: stop running containers
 
-## Volumes ##
+## How to start and go ##
+
+For **first run**, run
+
+```
+./ci-up.sh
+```
+
+This script will download images, create and run containers with Docker Compose.
+
+To stop containers together,
+
+```
+./ci-stop.sh
+```
+To start them again
+
+```
+./ci-start.sh
+```
+
+## Further notes ##
+
+  * Jenkins image *mount host Docker socket* as volume in order to let Jenkins manage **external** containers from within.
+  This is [DooD (Docker-outside-of-Docker)](http://container-solutions.com/running-docker-in-jenkins-in-docker/) solution, i.e. Jenking can create *sibling* containers running on host. If you want to run e2e tests from Jenkins, you can share `jenkinsdocker_ci-net` network with sibling containers to access them.
+  * Sonar DB first init may be slower than Sonar web app, so you can encounter connectivity problems. Just restart and should work fine.
+
+### Volumes ###
 Data are stored in [named Docker Volumes](https://docs.docker.com/engine/tutorials/dockervolumes/):
 
  * Jenkins: `/var/jenkins_home` (named `jenkinsdata`) contains all Jenkins data
@@ -26,9 +53,3 @@ Data are stored in [named Docker Volumes](https://docs.docker.com/engine/tutoria
  * Sonar: `/var/lib/mysql` (named `mysqldata`) is storage folder of Sonar DB container, containing all Sonar data.
 
 Docker stores named container in `/var/lib/docker/volumes/[volume_name]/_data` folder on Docker host
-
-## Further notes ##
-
- * Jenkins image *mount host Docker socket* as volume in order to let Jenkins manage containers **external** containers from within.
- This is [DooD (Docker-outside-of-Docker)](http://container-solutions.com/running-docker-in-jenkins-in-docker/) solution, i.e. Jenking can create *sibling* containers running on host. If you want to run e2e tests from Jenkins, you can share `jenkinsdocker_ci-net` network with sibling containers to access them.
- * Sonar DB first init may be slower than Sonar web app, so you can encounter connectivity problems. Just restart and should work fine.
